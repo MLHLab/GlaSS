@@ -3,23 +3,18 @@ GLACIER ANNUAL MASS-BALANCE PREDICTION PIPELINE
 
 OVERVIEW
 --------
-This repository contains Python scripts for a staged machine-learning workflow to predict glacier annual mass balance from climate and spatial predictors. The workflow includes data preprocessing, correlation-based feature reduction, self-supervised feature reconstruction, hyperparameter search, sequential rejection of high-error observations, final model evaluation, figure generation, independent-data prediction, and export of discarded WGMS identifiers.
+This repository contains Python scripts for a staged machine-learning workflow to predict glacier annual mass balance from climate and spatial predictors. The workflow includes data preprocessing, correlation-based feature reduction, self-supervised feature reconstruction, hyperparameter search, sequential rejection of high-error observations, and final model evaluation.
 
-The scripts were developed for execution in Python, including the Spyder IDE. Run the main pipeline scripts in numerical order because each stage creates a checkpoint required by the next stage.
-
-IMPORTANT
----------
+IMPORTANT TO NOTE
+-----------------
 1. Use the scripts and dataset version that match the analysis being reproduced. Column names, row order, and the target variable must match the expected inputs.
 2. The scripts may require adjustment of file paths for your computer. Keep the Python scripts and input CSV files together in one project directory where possible.
 3. Do not upload confidential, restricted, or third-party data to GitHub unless you have permission to redistribute it. You may publish the code separately and explain how authorized users can obtain the data.
 4. Pickle (.pkl) checkpoints are generated intermediate files. They may be large and should generally not be committed to GitHub unless there is a specific reason and their contents are suitable for public release.
 5. Results may vary with software versions, data versions, and execution environment. Use the same data and package versions for close reproducibility.
 
-REPOSITORY CONTENTS
--------------------
-
 MAIN FOUR-STAGE PIPELINE
------------------------
+------------------------
 
 01_Preprocessing_Correlation.py
     Loads the glacier dataset, performs preprocessing and gap filling as implemented in the script, applies correlation-based feature reduction, prepares model inputs, and saves the Stage 1 checkpoint.
@@ -32,18 +27,6 @@ MAIN FOUR-STAGE PIPELINE
 
 04_FinalCV_Analysis_Excel.py
     Loads the Stage 3 checkpoint and performs final five-fold cross-validation. It generates fold-wise actual-versus-predicted values, model performance comparisons, ablation results, feature-importance analyses, and an Excel workbook containing result tables.
-
-ADDITIONAL SCRIPTS
-------------------
-
-05_Manuscript_Figures_C_D_CommonAxis.py
-    Generates manuscript figures for observed-versus-predicted values and residual distributions as separate high-resolution image files. The dataset configurations use common axis limits for comparability. Check input paths and the output directory before execution.
-
-06_Independent_Test_Annual_Mass_Balance.py
-    Applies the workflow to an independent dataset containing predictors but no annual mass-balance target. The script preserves input row order and exports row-wise predictions. Ensure predictor names and units are compatible with the training data.
-
-07_Export_Discarded_WGMS_IDs.py
-    Uses Stage 3 rejection information and the original dataset to map rejected observations to their original rows and export WGMS_ID and year information to Excel. The original dataset must have the same row order as the data used during training.
 
 INPUT DATA
 ----------
@@ -80,23 +63,6 @@ Install the required packages in the same environment used to run the scripts. F
 
 If using Anaconda/Spyder, ensure that packages are installed in the Python environment Spyder uses. Check package versions if compatibility issues occur.
 
-RECOMMENDED DIRECTORY STRUCTURE
--------------------------------
-
-    Glacier-Mass-Balance-Prediction/
-        01_Preprocessing_Correlation.py
-        02_SSL_and_GridSearch.py
-        03_Rejection_and_RetainedData.py
-        04_FinalCV_Analysis_Excel.py
-        05_Manuscript_Figures_C_D_CommonAxis.py
-        06_Independent_Test_Annual_Mass_Balance.py
-        07_Export_Discarded_WGMS_IDs.py
-        GlacierDataset_170Vars.csv
-        GlacierDataset_IndTest_170Vars.csv
-        GlacierDataset_172Vars.csv
-        Glacier_Results/
-        README.txt
-
 The scripts may create the output directory when needed. Some scripts require checkpoints or result files from previous stages. Keep generated files in the expected output directory or update paths in the scripts.
 
 HOW TO RUN THE MAIN PIPELINE
@@ -123,8 +89,6 @@ Run the four main scripts in this order:
    - Wait for cross-validation, comparison, ablation, and importance calculations to finish.
    - Review the generated Excel workbook and CSV prediction output.
 
-Run the additional scripts only after their prerequisite result files or checkpoints have been generated.
-
 METHODOLOGICAL SUMMARY
 ----------------------
 
@@ -141,8 +105,6 @@ The main pipeline implements the following general sequence:
 9. Permutation-based feature-importance analysis.
 10. Export of tables, predictions, figures, and identifier information.
 
-Refer to the Python scripts for the exact implementation, parameters, thresholds, data handling, and output filenames. Do not infer methodological details solely from this summary.
-
 OUTPUTS
 -------
 
@@ -153,9 +115,6 @@ Depending on the scripts and settings, outputs may include:
 - Stage3_Retained_FinalCV.pkl
 - All Results.xlsx
 - Final_CV_Actual_vs_Predicted.csv
-- High-resolution manuscript figures
-- Independent_Test_Annual_Mass_Balance_Predictions.xlsx
-- Discarded_WGMS_IDs.xlsx
 
 Output filenames and locations are controlled by the scripts and may need to be updated for your local setup.
 
@@ -178,18 +137,3 @@ LIMITATIONS AND NOTES
 - The topographical parameter comparison requires the exact additional predictor columns to be available and configured in the relevant script.
 - Deep-learning benchmark architectures should not be considered reproduced unless their architecture and training details are explicitly implemented and documented.
 - This repository does not guarantee that the input data may be publicly redistributed. Check the data provider's terms and permissions.
-
-CITATION
---------
-
-If you use this code in academic work, cite the associated publication or preprint once its bibliographic details are available. Until then, cite the repository URL and access date according to your institution's or publisher's requirements.
-
-LICENSE
--------
-
-Add a LICENSE file before publicly distributing the repository. Choose a license that matches the intended reuse permissions and any institutional, funding, or data-provider requirements. Do not assume that the code is open-source licensed merely because it is hosted on GitHub.
-
-CONTACT
--------
-
-For questions about the implementation, contact the repository maintainer listed on the GitHub repository page.
